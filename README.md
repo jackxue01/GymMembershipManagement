@@ -19,7 +19,7 @@ A lightweight Gym Membership Management System built with **Python** and **SQLit
 ---
 
 ## 🗂️ Project Structure
-
+```text
 GymMembershipManagement/
 ├── src/
 │   ├── main.py          # Entry point / menu system
