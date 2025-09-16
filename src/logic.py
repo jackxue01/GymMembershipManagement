@@ -1,5 +1,6 @@
 from models import insert_member, get_all_members, flag_inactive_members, insert_payment, update_member_status, get_expiring_members, update_member_plan
 import csv
+from db import *
 
 def add_member():
     name = input("Enter name: ")

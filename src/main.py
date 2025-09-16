@@ -1,9 +1,11 @@
 from logic import *
+from db import *
+from models import *
 
 def admin_login():
     username = input("Enter admin username: ")
     password = input("Enter admin password: ")
-    if username and password:
+    if check_admin(username, password):
         print("Login successful!")
         return True
     else:
@@ -74,6 +76,7 @@ def edit_menu():
             print("Invalid choice. Please try again.")
 
 def main():
+    initialize_db()
     while True:
         print("\n=== Gym Management System ===")
         print("1. View Data")

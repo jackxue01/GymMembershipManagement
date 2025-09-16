@@ -1,5 +1,6 @@
 from db import get_connection
 import sqlite3
+import bcrypt
 
 def insert_member(name, email, phone, plan_id, start_date, is_active=1):
    conn = get_connection()
@@ -84,3 +85,37 @@ def flag_inactive_members(min_checkins=4):
    results = [dict(row) for row in cursor.fetchall()]
    conn.close()
    return results
+
+def insert_admin(username, password):
+    conn = get_connection()
+    cursor = conn.cursor()
+    password = password.encode('utf-8')
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    try:
+        cursor.execute("""
+            INSERT INTO admins (username, password_hash)
+            VALUES (?, ?)
+        """, (username, hashed))
+        conn.commit()
+        print("Admin added successfully.")
+    except sqlite3.IntegrityError:
+        print("Username already exists. Please choose another one.")
+    finally:
+        conn.close()
+
+def check_admin(username, password):
+  conn = get_connection()
+  cursor = conn.cursor()
+  cursor.execute("SELECT username FROM admins WHERE username = ?", (username,))
+  result = cursor.fetchone()
+  if result == None:
+    print("Username not found.")
+    return False
+
+  cursor.execute("SELECT password_hashed FROM admins WHERE username = ?", (username,))
+  the_password = cursor.fetchone()
+  if not bcrypt.checkpw(password.encode('utf-8'), the_password):
+    print("Password incorrect.")
+    return False
+
+  return True
